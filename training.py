@@ -99,7 +99,7 @@ def _train(args):
     discriminator = discriminator.to(device)
 
     criterion = nn.BCELoss().to(device)
-    optimizer = torch.optim.Adam(generator.parameters(), lr=args.lr, momentum=args.momentum)
+    optimizer = torch.optim.Adam(generator.parameters(), lr=args.lr)
     #optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
 
     for epoch in range(0, args.epochs):
