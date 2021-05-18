@@ -30,8 +30,7 @@ import torchvision.transforms as transforms
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-classes = ("plane", "car", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck")
-
+k = 10
 
 # https://github.com/pytorch/tutorials/blob/master/beginner_source/blitz/cifar10_tutorial.py#L118
 class Generator(nn.Module):
@@ -130,12 +129,12 @@ def _train(args):
             #optimizer.step()
             G_of_noise = generator(noise)
             D_of_G_of_noise = discriminator(G_of_noise)
-            loss = criterion(D_of_G_of_noise, true_labels)
+            generator_loss = criterion(D_of_G_of_noise, true_labels)
             generator_loss.backward()
             optimizer.step()
 
             # print statistics
-            running_loss += loss.item()
+            running_loss += generator_loss.item()
             #if i % 2000 == 1999:  # print every 2000 mini-batches
              #   print("[%d, %5d] loss: %.3f" % (epoch + 1, i + 1, running_loss / 2000))
               #  running_loss = 0.0
@@ -188,7 +187,7 @@ if __name__ == "__main__":
     parser.add_argument("--hosts", type=json.loads, default=os.environ["SM_HOSTS"])
     parser.add_argument("--current-host", type=str, default=os.environ["SM_CURRENT_HOST"])
     parser.add_argument("--model-dir", type=str, default=os.environ["SM_MODEL_DIR"])
-    parser.add_argument("--data-dir", type=str, default=os.environ["SM_CHANNEL_TRAINING"])
+    #parser.add_argument("--data-dir", type=str, default=os.environ["SM_CHANNEL_TRAINING"])
     parser.add_argument("--num-gpus", type=int, default=os.environ["SM_NUM_GPUS"])
 
     _train(parser.parse_args())
